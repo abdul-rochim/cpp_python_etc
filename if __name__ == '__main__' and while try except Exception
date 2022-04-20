@@ -1,0 +1,24 @@
+import time
+
+def useful_function():
+    for i in range(5):
+        print("Test: {}".format(i))
+        time.sleep(1.0)
+
+#useful_function()
+#if __name__ == '__main__':
+#    useful_function()
+
+#while True:
+#    try:
+#        print("Wheeeee! you can't stop me") 
+#        time.sleep(0.01)
+#    except:
+#        print("Oww... Whatever imma keep running")
+
+while True:
+    try:
+        print("Wheeeee! you can't stop me") 
+        time.sleep(0.01)
+    except Exception:
+        print("Oww... Whatever imma keep running")

@@ -1,0 +1,22 @@
+//if constexpr 
+//C++17 in detail
+#include <iostream>
+#include <memory>
+
+template<typename Concrete, typename ...Ts>
+std::unique_ptr<Concrete> constructArgs(Ts&&... params){
+    if constexpr (std::is_constructible_v<Concrete, Ts...>) //normal 'if' won't compile so use 'if constexpr'
+        return std::make_unique<Concrete>(std::forward<Ts>(params)...);
+    else return nullptr;
+}
+
+struct Test{
+   Test(int, int) {} // 2 args, to compile is to use if constexpr
+};
+
+int main() {
+
+    auto p = constructArgs<Test> (10, 10, 10); //3 args!
+
+    return 0;
+}

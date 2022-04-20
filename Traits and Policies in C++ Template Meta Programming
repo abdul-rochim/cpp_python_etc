@@ -1,0 +1,42 @@
+//TRAITS AND POLICIES MODERN C++
+//ref_univ_utrecht
+#include <iostream>
+#include <iomanip>
+template <typename T>
+class AccumulationTraits;
+template <>
+class AccumulationTraits <char> {
+public:
+typedef int AccT;
+static AccT const zero() {return 1;}};
+template <>
+class AccumulationTraits <short> {
+public:
+typedef int AccT;
+static AccT const zero() {return 1;}};
+template <>
+class AccumulationTraits <float> {
+public :
+typedef double AccT;
+static const AccT zero() {return 1;}};
+
+template<typename T, typename Traits = AccumulationTraits<T>> class SumPolicy{
+public:
+typedef typename Traits::AccT AccT; static AccT accumulate(AccT &total, T const& beg) {return total*= beg;}};
+
+template <typename T, typename Policy = SumPolicy<T, AccumulationTraits<T>>, typename Traits = AccumulationTraits<T>>
+typename Traits::AccT accum(T * beg, const T* end) {
+typedef typename Traits::AccT AccT;
+AccT total = Traits::zero();
+while (*beg != *end){
+Policy::accumulate(total, *beg); ++(*beg);} return total;}
+
+int main() {
+std::cout<<"Haloooooo Cak!!!!!\nTEST for FACTORIAL FUNCTION Using\n◇◇◇◇◇ TRAITS AND POLICIES ◇◇◇◇◇\nin TEMPLATE METAPROGRAMMING <TMP> C++ through Online Apps SOLO LEARN.\n\n☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆☆\n";
+double beg = 1, End;
+std::cout << "please enter 1 number for calculating Factorial Function:\n"<< std::endl;
+std::cin >> End; std::cout<<"you enter number : " << End << "\n\n";
+std::cout<< "factorial of " << End << "! = "; std::cout<< std::fixed << std::setprecision(2);
+double end = End + 1; std::cout<<accum<double,SumPolicy<double,AccumulationTraits<float>>,AccumulationTraits<float>> (&beg,&end);
+return 0;
+}

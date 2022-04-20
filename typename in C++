@@ -1,0 +1,49 @@
+//typename
+//Advanced Metaprogramming Book
+#include <iostream>
+
+template<typename T>
+struct MyClass{
+    typedef T Type;
+    typedef double Y;
+};
+
+template<> struct MyClass<int> {
+    static const int Y = 314;
+    typedef int Type;
+};
+
+const int Q = 8;
+
+template<typename T>
+void SomeFunc(){
+    typename MyClass<T>::Y * Q = new typename MyClass<T>::Y (9999);
+    std::cout << *Q << std::endl;
+    //std::cout << MyClass<T>::Y * Q; // error
+}
+
+template<typename T>
+void Another_SomeFunc(){
+    //std::cout << typename MyClass<T>::Y * Q; // error
+    std::cout << MyClass<T>::Y * Q;
+}
+
+/*
+template<typename X>
+struct AnotherClass{
+    //MyClass<X>::Type t1; // error: need typename
+    static constexpr typename MyClass<X>::Type t2 = 124.45; // ok
+    
+    MyClass<double>::Type t3; // ok
+    static constexpr typename MyClass<double>::Type t4 = 679.123; // ok
+    
+    static constexpr typename MyClass<X>::Y member1_ = 111.222; // ok, but it won't compile if X is 'int'.
+    static constexpr typename MyClass<double>::Y member2_ = 333.444;
+};
+*/
+int main() {    
+    SomeFunc<double>();    
+    std::cout << '\n';
+    Another_SomeFunc<int>();    
+    return 0;
+}

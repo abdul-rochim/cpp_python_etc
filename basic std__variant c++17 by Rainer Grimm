@@ -1,0 +1,42 @@
+//basic variant //c++17 in detail Rainer Grimm
+#include <iostream>
+#include <string>
+#include <variant>
+struct PrintVisitor{
+    void operator()(int i) { std::cout << "int i: " << i << "\n";}
+    void operator()(float f) { std::cout << "float f: " << f << "\n";}
+    void operator()(const std::string& s) { std::cout << "string s: " << s << "\n";}
+};
+
+int main(){
+    std::variant<int, float, std::string> intFloatString; static_assert(std::variant_size_v<decltype(intFloatString)> == 3); 
+    std::visit(PrintVisitor{}, intFloatString);
+    std::cout << "index: " << intFloatString.index() << std::endl;
+    intFloatString = 100.f;
+    std::cout << "index: " << intFloatString.index() << std::endl;
+    intFloatString = "hello";
+    std::cout << "index: " << intFloatString.index() << std::endl;  
+    //try with get_if 
+    if(const auto intPtr = std::get_if<int>(&intFloatString))
+        std::cout << "int: " << *intPtr << std::endl;
+    else if(const auto floatPtr = std::get_if<float>(&intFloatString))
+        std::cout << "float: " << *floatPtr << std::endl;
+    else if(const auto stringPtr = std::get_if<std::string>(&intFloatString))
+        std::cout << "string: " << *stringPtr << std::endl;
+        
+    if(std::holds_alternative<int>(intFloatString))
+        std::cout << "the variant holds an int\n" << std::endl;
+    else if(std::holds_alternative<float>(intFloatString))
+        std::cout << "the variant holds a float\n" << std::endl;
+    else if(std::holds_alternative<std::string>(intFloatString))
+        std::cout << "the variant holds a string\n" << std::endl;    
+    //try/catch and bad_variant_access
+    try{
+        auto f = std::get<float>(intFloatString);
+        std::cout << "float!: " << f << std::endl;
+    }
+    catch (std::bad_variant_access&){
+        std::cout << "our variant does not hold float at this moment...\n" << std::endl;
+    }
+    return 0;
+}

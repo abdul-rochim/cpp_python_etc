@@ -1,0 +1,49 @@
+//what are callables by Jason T.
+#include <iostream>
+#include <utility>
+#include <functional>
+
+//expensive calculation
+template<typename F, typename G>
+auto f_of_g(F &&f, G &&g){
+    return [f = std::forward<F>(f), g = std::forward<G>(g)] (){
+        return f(g());
+    };
+}
+
+int expensive_calculation(int x) //f(int x), int x = g()
+{ return 123 + x; }
+int even_more_expensive() //g()
+{ return 2; }
+
+//to avoid expensive calculation ()
+struct S{
+    int i{10};
+    int j{13};
+    
+    int get_i() const{ return i;}
+    int get_i_plus_10() const{ return i+10;}
+    
+    int operator()(int k){ return i+j+k;}
+};
+
+int main(const int argc, const char *[]) {
+//expensive calculation
+    auto calculate = f_of_g(expensive_calculation, even_more_expensive);
+    std::cout << calculate() << "\n\n"; // deduce ()
+    
+//alternative calculation (avoiding expensive calculation)
+    S s;
+    S *s_ptr = &s;
+    std::cout << s_ptr->get_i_plus_10() << '\n';
+    std::cout << s(7) << '\n'; //calling operator()
+    
+    //int (S::*mem_fn_ptr) = &S::i; //pointing to non function and non const
+    int (S::*mem_fn_ptr)() const = &S::get_i;
+    mem_fn_ptr = &S::get_i_plus_10;
+    std::cout << std::invoke(mem_fn_ptr, s);
+    
+    //return (s_ptr->*mem_fn_ptr); //non function and non const
+    return (s_ptr->*mem_fn_ptr)(); //return std::invoke(mem_fn_ptr, s); //using header <functional>
+    //return s(argc); //calling operator()
+}

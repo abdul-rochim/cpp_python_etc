@@ -1,0 +1,41 @@
+#include <iostream>
+#include <optional>
+#include <string>
+#include <memory>
+#include <complex>
+#include <vector>
+
+std::optional<std::string> CreateString(){
+    std::string str{"Hello super awesome long string"};
+    return {str}; //copy
+    //return str; //move
+}
+
+std::shared_ptr<int> foo(){
+    const int cint = 123;
+    std::unique_ptr<int> p = std::make_unique<int>(cint);
+    return p; //move
+    //return {p}; //copy, so it breaks
+}
+
+auto Ocd(){
+    std::optional<std::complex<double>> ocd{std::in_place, 3.0, 4.0};
+    //std::cout << od.value() << std::endl; //*od
+    return *ocd;
+}
+
+auto Ovd(){
+    std::optional<std::vector<int>> ovd{std::in_place, {1, 2, 3}};
+    return ovd.value();
+}
+
+int main() {
+    std::cout << *CreateString() << std::endl;
+    std::cout << foo() << std::endl;
+    std::cout << Ocd() << std::endl;
+    for(auto& a : Ovd()){
+        std::cout << a << std::endl;
+    }
+    
+    return 0;
+}

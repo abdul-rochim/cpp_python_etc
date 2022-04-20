@@ -1,0 +1,49 @@
+#include <iostream>
+#include <variant>
+#include <string>
+//A
+template<typename ...Ts>
+struct overload : Ts...{
+    using Ts::operator()...;
+};
+template<typename ...Ts>
+overload(Ts...) -> overload<Ts...>;
+//B
+struct PrintVisitor{
+    void operator()(int& i) const { std::cout << "int : " << i << '\n';}
+    void operator()(float& f) const { std::cout << "float : " << f << '\n'; }
+    void operator()(std::string& s) const { std::cout << "string : " << s << '\n'; }
+};
+//C
+auto print_Visitor = [] (const auto& t) { std::cout << "auto : " << t << '\n';};
+struct MultiplyVisitor{
+    float mFactor;
+    MultiplyVisitor(float factor) : mFactor{factor} {}
+    void operator()(int& i) { i *= static_cast<int>(mFactor);
+    std::cout << "i = i * mFactor = " << i << '\n';}
+    void operator()(float& f) { f *= mFactor;
+    std::cout << "f = f * mFactor = " << f << '\n';}
+    void operator()(std::string& s) {
+        std::cout << "nothing to do here...!!" << '\n';}
+};
+
+std::variant<int, float, std::string> myVariant{"Hello"};
+int main() {
+//A
+    std::visit(
+    overload{
+        [](const int& i) { std::cout << "int : " << i << '\n'; },
+        [](const std::string& s) { std::cout << "string : " << s << '\n'; },
+        [](const float& f) { std::cout << "float : " << f << '\n'; }
+    },
+    myVariant
+);
+//B
+    std::visit(PrintVisitor(), myVariant);
+//C
+    myVariant = 10.01f;
+    std::visit(print_Visitor, myVariant);
+    std::visit(MultiplyVisitor(2.1f), myVariant);  
+    
+    return 0;
+}

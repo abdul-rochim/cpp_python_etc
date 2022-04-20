@@ -1,0 +1,29 @@
+#Python Standard Library_1
+import string
+from string import Template
+
+s = 'Test aplikasi Sololearn untuk bahasa Python'
+leet = str.maketrans('abegiloprstz', '463611092572')
+
+#print (s)
+print (string.capwords(s))
+print (s.translate(leet))
+print("")
+
+values = {'var' : 'foo'}
+t = Template("""
+Variable         : $var
+Escape           : $$
+Variable in text : ${var}iable
+""")
+
+print ('TEMPLATE:', t.substitute(values))
+print("")
+
+s = """
+Variable         : %(var)s
+Escape           : %%
+Variable in texr : %(var)siable
+"""
+
+print('INTERPOLATION:', s % values)

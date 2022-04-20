@@ -1,0 +1,51 @@
+//Lambdas, Variadic Template, initilizer_list, vector
+#include <iostream>
+#include <initializer_list>
+#include <vector>
+
+template<typename ...params>
+void foo(params... p){
+    for(int i: {p...}){
+        std::cout << i << '\t';
+    }
+}
+
+template<int... Ints>
+void Foo(){
+    for(int j: {Ints...}){
+        std::cout << j << '\t';
+    }
+}
+
+template<typename... T>
+void FOO(T... t){
+    auto lm = [&, t...] {
+        for(int i: {t...}){
+            std::cout << i << '\t';
+        }
+        return "Test using Lambdas";
+    };
+    std::cout << lm();
+}
+
+template<typename T>
+void foo_(T t){
+    for(int i: t){
+        std::cout << i << '\t';
+    }
+}
+
+
+int main() {
+    foo(1,2,3);
+    std::cout << "\n\n";
+    Foo<1,2,3>();
+    std::cout << "\n\n";
+    FOO(1,2,3);
+    std::cout << "\n\n";
+    foo_<std::initializer_list<int>>({4,5,6});
+    std::cout << "\n\n";
+    foo_<std::vector<int>>({7,8,9});
+    
+    return 0;
+}

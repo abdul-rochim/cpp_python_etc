@@ -1,0 +1,36 @@
+#include <iostream>
+#include <string>
+using std::endl;
+
+void print()
+{
+    std::cout << "calling print()" << '\n';
+}
+
+template<typename T, typename ... param>
+void print(T firstArg, param ... args)
+{
+    std::cout << firstArg << '\t';
+
+    print(args ...);
+}
+
+int main() {
+
+    std::string s("world");
+    print(123, " hello", s);
+    
+    std::cout << endl;
+    
+    print<int, const char*, std::string> (123, " hello", s);
+
+    std::cout << endl;
+    
+    print<const char*, std::string> ("hello", s);
+    
+    std::cout << endl;
+    
+    print<std::string> (s);
+    
+    return 0;
+}

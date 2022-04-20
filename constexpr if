@@ -1,0 +1,32 @@
+//constexpr if
+//c++17 in detail book
+#include<iostream>
+//#include<type_traits>
+
+template<typename T> void linePrinter(const T& x){
+    if constexpr(std::is_integral_v<T>) //(std::is_integral<T>::value)
+        std::cout << "num " << x << '\n';
+    else if constexpr(std::is_floating_point_v<T>) //(std::is_floating_point<T>::value)
+    {
+        const auto frac = x - static_cast<long>(x);
+        std::cout << "flt " << x << " , frac " << frac << '\n';
+    }
+    else if constexpr(std::is_pointer_v<T>) //(std::is_pointer<T>::value)
+    {
+        std::cout << "ptr, ";
+        linePrinter(*x);
+    }
+    else
+        std::cout << '\n';
+}
+
+template<typename ...Args> void printWithInfo(Args ... args){
+    (linePrinter(args),...); //Fold Expression over the comma operator
+}
+
+int main() {
+    int i = 10;
+    float f = 2.56f;
+    printWithInfo(&i, &f, 30);
+    return 0;
+}

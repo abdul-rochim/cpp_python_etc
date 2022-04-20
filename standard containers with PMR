@@ -1,0 +1,22 @@
+//standard Containers with PMR C++17
+//C++17 in detail book
+//Polymorphic Memory Resource
+
+#include <iostream>
+#include <memory_resource>
+#include <vector>
+
+int main() {
+    char buffer[64]; //a small buffer on the stack
+    std::fill_n(std::begin(buffer), std::size(buffer)-1, '_');
+    std::cout << buffer << "\n\n\n";
+    
+    std::pmr::monotonic_buffer_resource pool{std::data(buffer), sizeof buffer};
+    
+    std::pmr::vector<char> vec(&pool);
+    for(char ch='a'; ch != 'z'; ++ch)
+        vec.push_back(ch);
+    std::cout << buffer << '\n';
+    
+    return 0;
+}

@@ -1,0 +1,49 @@
+// attributes modern c++
+#include <iostream>
+#include <string>
+[[deprecated("use AwesomeFunc instead")]] void GoodFuntion() {} //warning!
+[[noreturn]] void evacuate(std::string message) {
+    std::cerr << message << '\n';
+    if(message=="message")
+        throw;
+    std::terminate();
+}
+enum struct [[nodiscard]] Alert{
+    red,
+    orange,
+    yellow,
+    green
+};
+void trigger_alarm(){std::cout << "trigger alert\n";}
+void record_alert(){std::cout << "record alert\n";}
+void process_alert(Alert alert, std::string s){
+    switch(alert){
+    case Alert::red: //allert red
+        evacuate(s);
+    case Alert::orange: // allert yellow
+        trigger_alarm();
+        [[fallthrough]];
+    case Alert::yellow: // allert 
+        record_alert();
+        return;
+    case Alert::green:
+        return;
+    }
+}
+[[nodiscard]] int Compute(){return 1;}
+/*
+void test(){
+    Compute(); //warning! return value of a nodiscard function is discarded
+}
+*/
+void test(){
+    static_cast<void> (Compute()); //fine...
+    [[maybe_unused]] auto ret = Compute();
+    //std::cout << Compute() << std::endl;
+}
+int main() {
+    //GoodFuntion();
+    //process_alert(Alert::red, "message");
+    test();
+    return 0;
+}

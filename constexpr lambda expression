@@ -1,0 +1,20 @@
+//constexpr lambda expression
+#include <iostream>
+
+template<typename T> struct S{
+    using integral = T;
+};
+
+template<typename T>
+auto faultyLeakyLambda = [](typename S<T>::integral n) constexpr{
+    //int* p = new int(10); // operator new is not constexpr so that won't compile.
+    return n;// + (*p);
+};
+
+
+int main() {
+    const auto a_(10);
+    static_assert(faultyLeakyLambda<int>(a_) == 10, "You enter wrong number!!!");
+    
+    return EXIT_SUCCESS;
+}

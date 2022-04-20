@@ -1,0 +1,39 @@
+//Declaring Custom get<N> Function
+//template specialisations
+//c++17 in detail
+#include <iostream>
+#include <type_traits>
+#include <tuple>
+
+class MyClass{
+public:
+    MyClass(int i): a{i} {}
+    MyClass(float f): b{f} {}
+    int getA() const { std::cout << "int a = " << a << '\n'; return a;}
+    float getB() const { std::cout << "float b = " << b << '\n'; return b;}
+private:
+    int a; float b;
+};
+
+template<std::size_t I> auto get(MyClass& c){
+    if constexpr(I == 0) return c.getA();
+    else if constexpr(I == 1) return c.getB();
+}
+
+//specialisations to support tuple-like interface
+namespace std{
+    template<> struct tuple_size<MyClass> : std::integral_constant<size_t, 2> {};
+    template<> struct tuple_element<0, MyClass> { using type = int;};
+    template<> struct tuple_element<1, MyClass> { using type = float;};
+}
+
+//template specialisations
+template<> auto get<0>(MyClass& c) { return c.getA();}
+template<> auto get<1>(MyClass& c) { return c.getB();}
+
+int main() {
+    MyClass a(123), b(123.456f);
+    get<0>(a);
+    get<1>(b);
+    return 0;
+}

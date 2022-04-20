@@ -1,0 +1,25 @@
+//BASIC LAMBDA
+#include <iostream>
+
+struct
+{
+    template<typename T, typename U>
+    auto operator() (const T a, const U b) const
+    { std::cout << "calling by using operator()\n";
+    return a+b;}
+}L;
+
+auto ladd = [](auto const a, auto const b)
+           { std::cout << "calling by using lambda\n";
+           return a+b;};
+
+int main()
+{
+    auto add = L(40, 2);
+    std::cout << add << "\n\n";
+    
+    auto i = ladd(40, 2);
+    std::cout << i;
+    
+    return 0;
+}

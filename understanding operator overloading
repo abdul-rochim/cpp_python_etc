@@ -1,0 +1,34 @@
+//understanding operator overloading by Jason T.
+#include <iostream>
+struct Complex{
+    constexpr Complex(const double& x_)
+    : x{x_}, y{0} {}
+       
+    constexpr Complex(const double& x_, const double& y_)
+    : x{x_}, y{y_} {}
+      
+    Complex operator+ (const Complex& rhs){
+        std::cout << "calling operator+(const Complex& rhs)" << "\n";
+        return Complex(x+rhs.x , y+rhs.y);}
+        
+    [[nodiscard]] friend /*constexpr*/ Complex operator+ (const Complex& lhs, const Complex& rhs){
+        std::cout << "calling operator+(const Complex& lhs, const Complex& rhs)" << "\n";
+        return Complex(lhs.x+rhs.x , lhs.y+rhs.y);}
+    
+    friend std::ostream& operator<<(std::ostream& out, Complex const& c){
+        out << "x = " << c.x
+        << " ,y = " << c.y << "\n";
+        return out;}    
+private:
+   double x;
+   double y;
+};
+
+int main() {
+    Complex c(1, 2);
+    const auto result_1 = c + Complex(3, 4);
+    const auto result_2 = c + 4.5;
+    const auto result_3 = 7.5 + c;
+    std::cout << result_1 << "\n" << result_2 << "\n" << result_3;
+    return 0;
+}

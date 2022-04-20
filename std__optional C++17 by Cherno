@@ -1,0 +1,54 @@
+//std::optional C++17
+//by Cherno
+#include <iostream>
+#include <fstream>
+#include <optional>
+//1
+std::string readFileAsString(const std::string& filepath, bool& outSucces){
+    std::ifstream stream(filepath);
+    if (stream){
+        std::string result;
+        //read file
+        stream.close();
+        outSucces = true;
+        return result;
+    }
+    outSucces = false;
+    return std::string(); //""
+}
+//2
+std::optional<std::string> ReadFileAsString(const std::string& filepath){
+    std::ifstream stream(filepath);
+    if (stream){
+        std::string result;
+        //read file
+        stream.close();
+        return result;
+    }
+    return {}; //std::string(); //""
+}
+int main() {
+    std::cout << "A\n";
+    bool fileOpenedSuccessfully;
+   //std::string Data = readFileAsString("data.txt", fileOpenedSuccessfully);
+    readFileAsString("data.txt", fileOpenedSuccessfully);    
+    if(fileOpenedSuccessfully)//(data != "")
+    {
+        std::cout << "File read successfully\n";
+    }else{
+        std::cout << "File cannot be opened\n";
+    }
+    std::cout << "\nusing std::optional\nB\n";
+
+    std::optional<std::string> data = ReadFileAsString("data.txt");   
+    std::string value = data.value_or("Not present");
+    std::cout << value << std::endl;   
+    if(data) //(data.has_value())//(data != "")
+    {
+        std::cout << "File read successfully\n";
+    }else{
+        //data.value(); //std::string string = *data;
+        std::cout << "File could not be opened\n";
+    }   
+    std::cin.get();  
+}

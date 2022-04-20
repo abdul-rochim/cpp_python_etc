@@ -1,0 +1,41 @@
+//Declaring Non-Type Template Parameter with auto
+//Parameter Pack
+#include <iostream>
+template<auto ...vs> struct HeterogenousValue {
+    static void print() {
+        (std::cout << ... << vs) << '\n';
+        std::cout << (vs + ...) << '\n';
+    }
+};
+
+struct A{
+    int i;
+    void print() { std::cout << i << '\t' << "struct A\n"; }
+};
+/*
+struct B{
+    int i;
+};*/
+
+std::ostream& operator << (std::ostream& out, const A& a)
+{ out << a.i << '\n'; return out; }
+
+template<typename ...T>
+struct overloaded : T...{
+    //using T::i...;
+    int j;
+    void print() { std::cout << j << '\t' << "struct overloaded"; }
+};
+
+std::ostream& operator << (std::ostream& out, const overloaded<A>& a)
+{ out << a.j << '\n'; return out; }
+
+int main() {
+    using MyList = HeterogenousValue<100, 200, 300>;
+    MyList::print();
+    
+    overloaded<A> ol{222};
+    std::cout << ol; 
+    ol.print();
+    return 0;
+}

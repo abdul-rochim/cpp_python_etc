@@ -1,0 +1,25 @@
+//copy elision non moveable in c++17
+//in c++14, it won't compile as it lacks of copy and move constructors
+
+#include <iostream>
+#include <array>
+
+struct NonMoveable{
+    NonMoveable(int x_): x{x_}{}
+    NonMoveable(NonMoveable const&) = delete;
+    NonMoveable(NonMoveable&&) = delete;
+    
+    std::array<int, 1024> arr;
+    int x;
+};
+
+NonMoveable make(int val){
+    if(val>0) return NonMoveable(val);
+    return NonMoveable(-val);
+}
+
+int main() {
+    auto largeNonMoveableObj = make(90); //construct the object
+    //std::cout << largeNonMoveableObj.x;
+    return largeNonMoveableObj.x;
+}

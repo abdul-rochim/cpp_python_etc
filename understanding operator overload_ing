@@ -1,0 +1,32 @@
+//understanding operator overloading
+//by Jason T.
+#include <iostream>
+#include <string>
+
+struct Pointer{
+    std::string *s;
+    //Pointer(std::string*);
+    constexpr auto* operator->(){
+        return s;
+    }
+    constexpr auto* operator->() const {
+        return s;
+    }
+   friend std::ostream& operator<< (std::ostream&, const Pointer&);
+};
+
+//Pointer::Pointer(std::string* s_)
+//    : s{s_} {}
+
+std::ostream& operator<< (std::ostream& out, const Pointer& p){
+    out << *p.s << '\n';// out << *(p.s);
+    return out;
+}
+
+int main() {
+    std::string st {"Hello World!!!"};
+    Pointer dumb_pointer{&st};
+    std::cout << dumb_pointer;
+    std::cout << dumb_pointer->size();
+    return 0;
+}

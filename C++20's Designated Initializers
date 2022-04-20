@@ -1,0 +1,49 @@
+//C++20's Designated Initilizers
+
+#include <iostream>
+#include <vector>
+struct Parameters{
+    int i;
+    float f{};
+    double d;    
+    /*Parameters(int i, double d) : i{i}, d{d} {
+        std::cout << "Calling constructor\n";
+    }*/
+    
+    void some_non_trivial_type(){
+        std::cout << "Calling function\n";
+    }
+    
+    friend std::ostream& operator << (std::ostream& out, const Parameters& p);
+};
+
+std::ostream& operator << (std::ostream& out, const Parameters& p){
+    out << "i = " << p.i << "\n";
+    out << "f = " << p.f << "\n";
+    out << "d = " << p.d << "\n";
+    return out;
+}
+
+struct Others{
+    std::vector<Parameters> vec;
+};
+
+void use_parameter(Parameters p){
+    p.some_non_trivial_type();
+}
+
+int main() {
+    Parameters p = {.i=11, .d=11.11};
+    //use_parameter ({i:11, d:11.11}); 
+    std::cout << p << "\n";
+    
+//    std::vector<Parameters> v{Parameters{i:22 , d:33.33}};
+//    Others o_{vec:v};
+
+    Others o_{vec:std::vector<Parameters>{Parameters{i:22, d:33.33}}};   
+    for(auto& i : o_.vec){
+        std::cout << i << '\n';
+    }
+
+    return 0;
+}
